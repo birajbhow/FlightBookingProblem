@@ -6,19 +6,22 @@ namespace FlightBooking.Core
 {
     public class ScheduledFlight
     {
-        private readonly string _verticalWhiteSpace = Environment.NewLine + Environment.NewLine;
-        private readonly string _newLine = Environment.NewLine;
-        private const string Indentation = "    ";
+        private FlightSummary _flightSummary;
+
+        //private readonly string _verticalWhiteSpace = Environment.NewLine + Environment.NewLine;
+        //private readonly string _newLine = Environment.NewLine;
+        //private const string Indentation = "    ";
 
         public ScheduledFlight(FlightRoute flightRoute)
         {
-            FlightRoute = flightRoute;
-            Passengers = new List<Passenger>();
+            //FlightRoute = flightRoute;
+            //Passengers = new List<Passenger>();
+            this._flightSummary = new FlightSummary(flightRoute);
         }
 
         public FlightRoute FlightRoute { get; }
-        public Plane Aircraft { get; private set; }
-        public List<Passenger> Passengers { get; }
+        public Plane Aircraft { get { return _flightSummary.Aircraft; } }
+        public List<Passenger> Passengers { get { return _flightSummary.Passengers; } }
 
         public void AddPassenger(Passenger passenger)
         {
@@ -27,19 +30,12 @@ namespace FlightBooking.Core
 
         public void SetAircraftForRoute(Plane aircraft)
         {
-            Aircraft = aircraft;
+            this._flightSummary.Aircraft = aircraft;
         }
         
         public string GetSummary()
-        {
-            double costOfFlight = 0;
-            double profitFromFlight = 0;
-            var totalLoyaltyPointsAccrued = 0;
-            var totalLoyaltyPointsRedeemed = 0;
-            var totalExpectedBaggage = 0;
-            var seatsTaken = 0;
-
-            var result = "Flight summary for " + FlightRoute.Title;
+        {   
+            //var result = "Flight summary for " + FlightRoute.Title;
 
             foreach (var passenger in Passengers)
             {
@@ -47,8 +43,8 @@ namespace FlightBooking.Core
                 {
                     case(PassengerType.General):
                         {
-                            profitFromFlight += FlightRoute.BasePrice;
-                            totalExpectedBaggage++;
+                            _flightSummary.Profit += FlightRoute.BasePrice;
+                            _flightSummary.TotalExpectedBaggage++;
                             break;
                         }
                     case(PassengerType.LoyaltyMember):
@@ -57,71 +53,73 @@ namespace FlightBooking.Core
                             {
                                 var loyaltyPointsRedeemed = Convert.ToInt32(Math.Ceiling(FlightRoute.BasePrice));
                                 passenger.LoyaltyPoints -= loyaltyPointsRedeemed;
-                                totalLoyaltyPointsRedeemed += loyaltyPointsRedeemed;
+                                _flightSummary.TotalLoyaltyPointsRedeemed += loyaltyPointsRedeemed;
                             }
                             else
                             {
-                                totalLoyaltyPointsAccrued += FlightRoute.LoyaltyPointsGained;
-                                profitFromFlight += FlightRoute.BasePrice;                           
+                                _flightSummary.TotalLoyaltyPointsAccrued += FlightRoute.LoyaltyPointsGained;
+                                _flightSummary.Profit += FlightRoute.BasePrice;                           
                             }
-                            totalExpectedBaggage += 2;
+                            _flightSummary.TotalExpectedBaggage += 2;
                             break;
                         }
                     case(PassengerType.AirlineEmployee):
                         {
-                            totalExpectedBaggage += 1;
+                            _flightSummary.TotalExpectedBaggage += 1;
                             break;
                         }
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                costOfFlight += FlightRoute.BaseCost;
-                seatsTaken++;
+                _flightSummary.Cost += FlightRoute.BaseCost;
+                _flightSummary.SeatsTaken++;
             }
 
-            result += _verticalWhiteSpace;
+            return _flightSummary.ToString();
+
+            //result += _verticalWhiteSpace;
             
-            result += "Total passengers: " + seatsTaken;
-            result += _newLine;
-            result += Indentation + "General sales: " + Passengers.Count(p => p.Type == PassengerType.General);
-            result += _newLine;
-            result += Indentation + "Loyalty member sales: " + Passengers.Count(p => p.Type == PassengerType.LoyaltyMember);
-            result += _newLine;
-            result += Indentation + "Airline employee comps: " + Passengers.Count(p => p.Type == PassengerType.AirlineEmployee);
+            //result += "Total passengers: " + seatsTaken;
+            //result += _newLine;
+            //result += Indentation + "General sales: " + Passengers.Count(p => p.Type == PassengerType.General);
+            //result += _newLine;
+            //result += Indentation + "Loyalty member sales: " + Passengers.Count(p => p.Type == PassengerType.LoyaltyMember);
+            //result += _newLine;
+            //result += Indentation + "Airline employee comps: " + Passengers.Count(p => p.Type == PassengerType.AirlineEmployee);
             
-            result += _verticalWhiteSpace;
-            result += "Total expected baggage: " + totalExpectedBaggage;
+            //result += _verticalWhiteSpace;
+            //result += "Total expected baggage: " + totalExpectedBaggage;
 
-            result += _verticalWhiteSpace;
+            //result += _verticalWhiteSpace;
 
-            result += "Total revenue from flight: " + profitFromFlight;
-            result += _newLine;
-            result += "Total costs from flight: " + costOfFlight;
-            result += _newLine;
+            //result += "Total revenue from flight: " + profitFromFlight;
+            //result += _newLine;
+            //result += "Total costs from flight: " + costOfFlight;
+            //result += _newLine;
 
-            var profitSurplus = profitFromFlight - costOfFlight;
+            //var profitSurplus = profitFromFlight - costOfFlight;
 
-            result += (profitSurplus > 0 ? "Flight generating profit of: " : "Flight losing money of: ") + profitSurplus;
+            //result += (profitSurplus > 0 ? "Flight generating profit of: " : "Flight losing money of: ") + profitSurplus;
 
-            result += _verticalWhiteSpace;
+            //result += _verticalWhiteSpace;
 
-            result += "Total loyalty points given away: " + totalLoyaltyPointsAccrued + _newLine;
-            result += "Total loyalty points redeemed: " + totalLoyaltyPointsRedeemed + _newLine;
+            //result += "Total loyalty points given away: " + totalLoyaltyPointsAccrued + _newLine;
+            //result += "Total loyalty points redeemed: " + totalLoyaltyPointsRedeemed + _newLine;
 
-            result += _verticalWhiteSpace;
+            //result += _verticalWhiteSpace;
 
-            if (profitSurplus > 0 &&
-                seatsTaken < Aircraft.NumberOfSeats &&
-                seatsTaken / (double) Aircraft.NumberOfSeats > FlightRoute.MinimumTakeOffPercentage)
-            {
-                result += "THIS FLIGHT MAY PROCEED";
-            }
-            else
-            {
-                result += "FLIGHT MAY NOT PROCEED";
-            }
+            //if (profitSurplus > 0 &&
+            //    seatsTaken < Aircraft.NumberOfSeats &&
+            //    seatsTaken / (double) Aircraft.NumberOfSeats > FlightRoute.MinimumTakeOffPercentage)
+            //{
+            //    result += "THIS FLIGHT MAY PROCEED";
+            //}
+            //else
+            //{
+            //    result += "FLIGHT MAY NOT PROCEED";
+            //}
             
-            return result;
+            //return result;
         }
     }
 }

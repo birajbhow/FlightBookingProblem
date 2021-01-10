@@ -7,7 +7,6 @@
         public int AllowedBags { get; set; }
         public int LoyaltyPoints { get; set; }
         public bool IsUsingLoyaltyPoints { get; set; }
-
         public PassengerType Type { get; set; }
     }
     
@@ -16,5 +15,11 @@
         General,
         LoyaltyMember,
         AirlineEmployee
+    }
+
+    public class LoyaltyMember :  Passenger
+    {
+        //public int LoyaltyPoints { get; set; }
+        //public bool IsUsingLoyaltyPoints { get; set; }
     }
 }
