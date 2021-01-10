@@ -10,7 +10,7 @@ namespace FlightBooking.Tests
         [SetUp]
         public void Setup()
         {
-            var flightRoute = new FlightRoute("London", "NewYork") { BaseCost = 100 };
+            var flightRoute = new FlightRoute("London", "NewYork") { BaseCost = 100, MinimumTakeOffPercentage = 0.5 };
             this._subject = new ScheduledFlight(flightRoute);
         }
 

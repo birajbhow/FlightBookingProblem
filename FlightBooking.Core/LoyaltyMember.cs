@@ -6,7 +6,5 @@
         public override int AllowedBags => 2;
         public int LoyaltyPoints { get; set; }
         public bool IsUsingLoyaltyPoints { get; set; }
-
-        
     }
 }
