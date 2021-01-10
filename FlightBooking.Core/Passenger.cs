@@ -1,13 +1,13 @@
 ﻿namespace FlightBooking.Core
 {
-    public class Passenger
+    public abstract class Passenger
     {
         public string Name { get; set; }
         public int Age { get; set; }
-        public int AllowedBags { get; set; }
-        public int LoyaltyPoints { get; set; }
-        public bool IsUsingLoyaltyPoints { get; set; }
-        public PassengerType Type { get; set; }
+        public abstract int AllowedBags { get; }
+        //public int LoyaltyPoints { get; set; }
+        //public bool IsUsingLoyaltyPoints { get; set; }
+        public abstract PassengerType Type { get; }        
     }
     
     public enum PassengerType
@@ -15,11 +15,5 @@
         General,
         LoyaltyMember,
         AirlineEmployee
-    }
-
-    public class LoyaltyMember :  Passenger
-    {
-        //public int LoyaltyPoints { get; set; }
-        //public bool IsUsingLoyaltyPoints { get; set; }
     }
 }

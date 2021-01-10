@@ -26,9 +26,8 @@ namespace FlightBooking.Console
                 else if (enteredText.Contains(Commands.AddGeneral))
                 {
                     var passengerSegments = enteredText.Split(' ');
-                    _scheduledFlight.AddPassenger(new Passenger
-                    {
-                        Type = PassengerType.General, 
+                    _scheduledFlight.AddPassenger(new GeneralPassenger
+                    {   
                         Name = passengerSegments[2], 
                         Age = Convert.ToInt32(passengerSegments[3])
                     });
@@ -36,9 +35,8 @@ namespace FlightBooking.Console
                 else if (enteredText.Contains(Commands.AddLoyalty))
                 {
                     var passengerSegments = enteredText.Split(' ');
-                    _scheduledFlight.AddPassenger(new Passenger
+                    _scheduledFlight.AddPassenger(new LoyaltyMember
                     {
-                        Type = PassengerType.LoyaltyMember, 
                         Name = passengerSegments[2], 
                         Age = Convert.ToInt32(passengerSegments[3]),
                         LoyaltyPoints = Convert.ToInt32(passengerSegments[4]),
@@ -48,9 +46,8 @@ namespace FlightBooking.Console
                 else if (enteredText.Contains(Commands.AddAirline))
                 {
                     var passengerSegments = enteredText.Split(' ');
-                    _scheduledFlight.AddPassenger(new Passenger
+                    _scheduledFlight.AddPassenger(new Employee
                     {
-                        Type = PassengerType.AirlineEmployee, 
                         Name = passengerSegments[2], 
                         Age = Convert.ToInt32(passengerSegments[3]),
                     });

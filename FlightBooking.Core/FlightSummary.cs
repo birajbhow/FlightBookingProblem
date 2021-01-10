@@ -7,16 +7,11 @@ namespace FlightBooking.Core
 {
     public class FlightSummary
     {
-        private readonly string _verticalWhiteSpace = Environment.NewLine + Environment.NewLine;
-        private readonly string _newLine = Environment.NewLine;
         private const string Indentation = "    ";
-        private readonly FlightRoute _flightRoute;
-
+        
         public FlightSummary(FlightRoute flightRoute)
         {
-            //GeneralPassengerCount = 0;
-            //LoyaltyPassengerCount = 0;
-            //EmployeeCount = 0;
+            FlightRoute = flightRoute;
             Passengers = new List<Passenger>();
             Cost = 0;
             Profit = 0;
@@ -24,68 +19,53 @@ namespace FlightBooking.Core
             TotalLoyaltyPointsRedeemed = 0;
             TotalExpectedBaggage = 0;
             SeatsTaken = 0;
-            _flightRoute = flightRoute;
         }
 
-        //public int GeneralPassengerCount { get; set; }
-        //public int LoyaltyPassengerCount { get; set; }
-        //public int EmployeeCount { get; set; }
         public Plane Aircraft { get; set; }
         public List<Passenger> Passengers { get; private set; }
+        public FlightRoute FlightRoute { get; private set; }
         public double Cost { get; set; }
         public double Profit { get; set; }
         public int TotalLoyaltyPointsAccrued { get; set; }
         public int TotalLoyaltyPointsRedeemed { get; set; }
         public int TotalExpectedBaggage { get; set; }
         public int SeatsTaken { get; set; }
+        public double ProfitSurplus => Profit - Cost;
+        public bool FlightStatus => ProfitSurplus > 0 &&
+                SeatsTaken < Aircraft.NumberOfSeats &&
+                SeatsTaken / (double)Aircraft.NumberOfSeats > FlightRoute.MinimumTakeOffPercentage;
 
         public override string ToString()
-        {
-            var result = "Flight summary for " + _flightRoute.Title;
+        {   
+            var sb = new StringBuilder($"Flight summary for {FlightRoute.Title}");
+            sb.AppendLine();
+            sb.AppendLine();
+            sb.AppendLine($"Total passengers: {SeatsTaken}");
+            sb.AppendLine($"{Indentation}General sales: {Passengers.Count(p => p.Type == PassengerType.General)}");
+            sb.AppendLine($"{Indentation}Loyalty member sales: {Passengers.Count(p => p.Type == PassengerType.LoyaltyMember)}");
+            sb.AppendLine($"{Indentation}Airline employee comps: {Passengers.Count(p => p.Type == PassengerType.AirlineEmployee)}");            
+            sb.AppendLine();
+            sb.AppendLine($"Total expected baggage: {TotalExpectedBaggage}");            
+            sb.AppendLine();
+            sb.AppendLine($"Total revenue from flight:  {Profit}");
+            sb.AppendLine($"Total costs from flight::  {Cost}");
 
-            result += _verticalWhiteSpace;
-
-            result += "Total passengers: " + SeatsTaken;
-            result += _newLine;
-            result += Indentation + "General sales: " + Passengers.Count(p => p.Type == PassengerType.General);
-            result += _newLine;
-            result += Indentation + "Loyalty member sales: " + Passengers.Count(p => p.Type == PassengerType.LoyaltyMember);
-            result += _newLine;
-            result += Indentation + "Airline employee comps: " + Passengers.Count(p => p.Type == PassengerType.AirlineEmployee);
-
-            result += _verticalWhiteSpace;
-            result += "Total expected baggage: " + TotalExpectedBaggage;
-
-            result += _verticalWhiteSpace;
-
-            result += "Total revenue from flight: " + Profit;
-            result += _newLine;
-            result += "Total costs from flight: " + Cost;
-            result += _newLine;
-
-            var profitSurplus = Profit - Cost;
-
-            result += (profitSurplus > 0 ? "Flight generating profit of: " : "Flight losing money of: ") + profitSurplus;
-
-            result += _verticalWhiteSpace;
-
-            result += "Total loyalty points given away: " + TotalLoyaltyPointsAccrued + _newLine;
-            result += "Total loyalty points redeemed: " + TotalLoyaltyPointsRedeemed + _newLine;
-
-            result += _verticalWhiteSpace;
-
-            if (profitSurplus > 0 &&
-                SeatsTaken < Aircraft.NumberOfSeats &&
-                SeatsTaken / (double)Aircraft.NumberOfSeats > _flightRoute.MinimumTakeOffPercentage)
+            if (ProfitSurplus > 0)
             {
-                result += "THIS FLIGHT MAY PROCEED";
-            }
+                sb.AppendLine($"Flight generating profit of: {ProfitSurplus}");
+            } 
             else
             {
-                result += "FLIGHT MAY NOT PROCEED";
+                sb.AppendLine($"Flight losing money of: {ProfitSurplus}");
             }
+            
+            sb.AppendLine();
+            sb.AppendLine($"Total loyalty points given away: {TotalLoyaltyPointsAccrued}");
+            sb.AppendLine($"Total loyalty points redeemed: {TotalLoyaltyPointsRedeemed}");
+            sb.AppendLine();
+            sb.AppendLine($"{(FlightStatus ? "THIS FLIGHT MAY PROCEED" : "FLIGHT MAY NOT PROCEED")}");
 
-            return result;
+            return sb.ToString();
         }
     }
 }

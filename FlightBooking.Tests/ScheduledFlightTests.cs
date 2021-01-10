@@ -10,7 +10,7 @@ namespace FlightBooking.Tests
         [SetUp]
         public void Setup()
         {
-            var flightRoute = new FlightRoute("London", "Newyork");
+            var flightRoute = new FlightRoute("London", "NewYork") { BaseCost = 100 };
             this._subject = new ScheduledFlight(flightRoute);
         }
 
@@ -30,7 +30,7 @@ namespace FlightBooking.Tests
         {
             // arrange
             // act
-            this._subject.AddPassenger(new Passenger
+            this._subject.AddPassenger(new GeneralPassenger
             {
                 Name = "passenger1",
                 Age = 30
@@ -57,6 +57,13 @@ namespace FlightBooking.Tests
 
             // assert
             Assert.AreEqual(aircraftName, this._subject.Aircraft.Name);
+        }
+
+        [Test]
+        public void FlightRoute_Works_Fine()
+        {            
+            // assert
+            Assert.AreEqual(100, this._subject.FlightRoute.BaseCost);
         }
     }
 }
