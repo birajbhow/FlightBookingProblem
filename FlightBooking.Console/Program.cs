@@ -1,6 +1,7 @@
 ﻿using System;
 using FlightBooking.Core;
 using FlightBooking.Core.Constants;
+using FlightBooking.Core.DomainObjects.Passenger;
 
 namespace FlightBooking.Console
 {
@@ -29,7 +30,7 @@ namespace FlightBooking.Console
                     _scheduledFlight.AddPassenger(new GeneralPassenger
                     {   
                         Name = passengerSegments[2], 
-                        Age = Convert.ToInt32(passengerSegments[3])
+                        Age = Convert.ToInt32(passengerSegments[3])                        
                     });
                 }
                 else if (enteredText.Contains(Commands.AddLoyalty))
@@ -49,6 +50,15 @@ namespace FlightBooking.Console
                     _scheduledFlight.AddPassenger(new Employee
                     {
                         Name = passengerSegments[2], 
+                        Age = Convert.ToInt32(passengerSegments[3]),
+                    });
+                }
+                else if (enteredText.Contains(Commands.AddDiscounted))
+                {
+                    var passengerSegments = enteredText.Split(' ');
+                    _scheduledFlight.AddPassenger(new DiscountedPassenger
+                    {
+                        Name = passengerSegments[2],
                         Age = Convert.ToInt32(passengerSegments[3]),
                     });
                 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FlightBooking.Core
+namespace FlightBooking.Core.DomainObjects.Passenger
 {
     public class GeneralPassenger : Passenger
     {

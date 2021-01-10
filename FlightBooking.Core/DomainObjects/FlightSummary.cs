@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using FlightBooking.Core.DomainObjects.Passenger;
+using System;
 
 namespace FlightBooking.Core
 {
@@ -13,7 +11,7 @@ namespace FlightBooking.Core
         {
             _flightRoute = flightRoute;
             Cost = 0;
-            Profit = 0;
+            Revenue = 0;
             TotalLoyaltyPointsAccrued = 0;
             TotalLoyaltyPointsRedeemed = 0;
             TotalExpectedBaggage = 0;
@@ -21,14 +19,14 @@ namespace FlightBooking.Core
         }
         
         public double Cost { get; set; }
-        public double Profit { get; set; }
+        public double Revenue { get; set; }
         public int TotalLoyaltyPointsAccrued { get; set; }
         public int TotalLoyaltyPointsRedeemed { get; set; }
         public int TotalExpectedBaggage { get; set; }
         public int SeatsTaken { get; set; }
-        public double ProfitSurplus => Profit - Cost;
+        public double ProfitSurplus => Revenue - Cost;
 
-        public bool GetFlightStatus(int numberOfSeats) => 
+        public bool CanProceed(int numberOfSeats) => 
             ProfitSurplus > 0
             && SeatsTaken < numberOfSeats
             && SeatsTaken / (double)numberOfSeats > _flightRoute.MinimumTakeOffPercentage;
@@ -39,25 +37,22 @@ namespace FlightBooking.Core
             TotalExpectedBaggage += passenger.AllowedBags;
             Cost += _flightRoute.BaseCost;
 
-            if (passenger.Type == PassengerType.General)
-            {
-                Profit += _flightRoute.BasePrice;
-            }
-
             if (passenger.Type == PassengerType.LoyaltyMember)
             {
                 var loyaltyMember = passenger as LoyaltyMember;
                 if (loyaltyMember.IsUsingLoyaltyPoints)
-                {
-                    var loyaltyPointsRedeemed = Convert.ToInt32(Math.Ceiling(_flightRoute.BasePrice));
-                    TotalLoyaltyPointsRedeemed += loyaltyPointsRedeemed;
-                    loyaltyMember.LoyaltyPoints -= loyaltyPointsRedeemed;
+                {   
+                    TotalLoyaltyPointsRedeemed += Convert.ToInt32(Math.Ceiling(_flightRoute.BasePrice));
                 }
                 else
                 {
-                    TotalLoyaltyPointsAccrued += _flightRoute.LoyaltyPointsGained;
-                    Profit += _flightRoute.BasePrice;
+                    TotalLoyaltyPointsAccrued += _flightRoute.LoyaltyPointsGained;             
+                    Revenue += passenger.TicketPrice;
                 }
+            } 
+            else
+            {
+                Revenue += passenger.TicketPrice;
             }
         }
     }

@@ -1,4 +1,5 @@
 using FlightBooking.Core;
+using FlightBooking.Core.DomainObjects.Passenger;
 using NUnit.Framework;
 
 namespace FlightBooking.Tests
