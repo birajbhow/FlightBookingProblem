@@ -1,0 +1,24 @@
+MUST
+
+1) Add Unit tests
+
+2) Add DI
+	
+	- https://andrewlock.net/using-dependency-injection-in-a-net-core-console-application/
+
+3) Add logging
+
+4) Apply SOLID
+
+5) Refactoring and Commenting
+
+6) Keep code extensible
+
+
+NICE TO HAVE
+
+1) Change command read pattern
+	- present commands to user and ask to pick a number
+
+2) Convert to Switch Statement
+

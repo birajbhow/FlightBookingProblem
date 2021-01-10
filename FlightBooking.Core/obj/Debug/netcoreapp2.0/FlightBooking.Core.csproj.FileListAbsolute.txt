@@ -1,0 +1,9 @@
+D:\Repos\CapitalOnTap\FlightBookingProblem\FlightBooking.Core\bin\Debug\netcoreapp2.0\FlightBooking.Core.deps.json
+D:\Repos\CapitalOnTap\FlightBookingProblem\FlightBooking.Core\bin\Debug\netcoreapp2.0\FlightBooking.Core.dll
+D:\Repos\CapitalOnTap\FlightBookingProblem\FlightBooking.Core\bin\Debug\netcoreapp2.0\FlightBooking.Core.pdb
+D:\Repos\CapitalOnTap\FlightBookingProblem\FlightBooking.Core\obj\Debug\netcoreapp2.0\FlightBooking.Core.csprojAssemblyReference.cache
+D:\Repos\CapitalOnTap\FlightBookingProblem\FlightBooking.Core\obj\Debug\netcoreapp2.0\FlightBooking.Core.AssemblyInfoInputs.cache
+D:\Repos\CapitalOnTap\FlightBookingProblem\FlightBooking.Core\obj\Debug\netcoreapp2.0\FlightBooking.Core.AssemblyInfo.cs
+D:\Repos\CapitalOnTap\FlightBookingProblem\FlightBooking.Core\obj\Debug\netcoreapp2.0\FlightBooking.Core.csproj.CoreCompileInputs.cache
+D:\Repos\CapitalOnTap\FlightBookingProblem\FlightBooking.Core\obj\Debug\netcoreapp2.0\FlightBooking.Core.dll
+D:\Repos\CapitalOnTap\FlightBookingProblem\FlightBooking.Core\obj\Debug\netcoreapp2.0\FlightBooking.Core.pdb
