@@ -11,10 +11,8 @@ namespace FlightBooking.Tests
 
         [SetUp]
         public void Setup()
-        {
-            var flightRoute = new FlightRoute("London", "NewYork") { BaseCost = 100, MinimumTakeOffPercentage = 0.5 };            
-            var aircraft = new Plane { Id = 123, Name = "Antonov AN-2", NumberOfSeats = 12 };
-            this._subject = new ScheduledFlight(flightRoute, aircraft, new Airline());
+        {   
+            this._subject = new ScheduledFlight(MockData.FlightRoute, MockData.Aircraft("AAA0", 10), MockData.Airline);
         }
 
         [Test]
@@ -66,7 +64,40 @@ namespace FlightBooking.Tests
         public void FlightRoute_Works_Fine()
         {            
             // assert
-            Assert.AreEqual(100, this._subject.FlightRoute.BaseCost);
+            Assert.AreEqual(50.0, this._subject.FlightRoute.BaseCost);
+        }
+
+        [Test]
+        public void GetSummary_Check_CanProceed_True()
+        {
+            // arrange
+            for(var i=0; i<8; i++)
+            {
+                this._subject.AddPassenger(MockData.GetGeneralPassenger());
+            }            
+
+            // act
+            var result = this._subject.GetSummary();
+
+            // assert
+            Assert.IsTrue(result.Contains("THIS FLIGHT MAY PROCEED"));
+        }
+
+        [Test]
+        public void GetSummary_Check_CanProceed_False_With_Additional_Message()
+        {
+            // arrange                        
+            for (var i = 0; i < 13; i++)
+            {
+                this._subject.AddPassenger(MockData.GetGeneralPassenger());
+            }
+
+            // act
+            var result = this._subject.GetSummary();
+
+            // assert
+            Assert.IsTrue(result.Contains("FLIGHT MAY NOT PROCEED"));
+            Assert.IsTrue(result.Contains("AAA2 could handle this flight."));
         }
     }
 }

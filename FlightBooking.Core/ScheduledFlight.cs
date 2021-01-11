@@ -17,9 +17,9 @@ namespace FlightBooking.Core
         public ScheduledFlight(FlightRoute flightRoute, Plane aircraft, Airline airline)
         {
             FlightRoute = flightRoute;
-            Aircraft = aircraft;            
+            Aircraft = aircraft ?? new Plane();
             Passengers = new List<Passenger>();
-            _airline = airline;
+            _airline = airline ?? new Airline();
             _flightSummary = new FlightSummary(flightRoute);  
         }
 

@@ -52,7 +52,7 @@ namespace FlightBooking.Core.DomainServices
         {
             return SeatTakenRule
                 ? new List<string>()
-                : airline.Aircrafts
+                : airline?.Aircrafts
                     .Where(a => a.Id != aircraft.Id && a.NumberOfSeats >= OverbookedSeats)
                     .Select(a => a.Name);
         }
