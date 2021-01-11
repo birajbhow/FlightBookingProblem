@@ -4,6 +4,9 @@ using System.Text;
 
 namespace FlightBooking.Core.Constants
 {
+    /// <summary>
+    /// Console UI commands list
+    /// </summary>
     public static class Commands
     {
         public const string PrintSummary = "print summary";

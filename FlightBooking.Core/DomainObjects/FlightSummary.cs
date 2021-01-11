@@ -3,6 +3,9 @@ using System;
 
 namespace FlightBooking.Core
 {
+    /// <summary>
+    /// Important flight information aggregation
+    /// </summary>
     public class FlightSummary
     {   
         private readonly FlightRoute _flightRoute;
@@ -26,6 +29,10 @@ namespace FlightBooking.Core
         public int SeatsTaken { get; set; }
         public double ProfitSurplus => Revenue - Cost;
 
+        /// <summary>
+        /// Flight summary info updated when new passenger is added
+        /// </summary>
+        /// <param name="passenger">A type of passenger</param>
         public void Update(Passenger passenger)
         {
             SeatsTaken++;
@@ -36,6 +43,7 @@ namespace FlightBooking.Core
             {
                 //case PassengerType.AirlineEmployee:
                 //    break;
+                // Total loyalty points for flight changes based on loyalty member settings
                 case PassengerType.LoyaltyMember:
                     {
                         var loyaltyMember = passenger as LoyaltyMember;
@@ -51,6 +59,7 @@ namespace FlightBooking.Core
                     }
                     break;
                 default:
+                    // Total flight revenue updated based on ticket price of a passenger type
                     Revenue += passenger.TicketPrice;
                     break;
             }

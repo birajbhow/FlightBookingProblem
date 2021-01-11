@@ -5,6 +5,9 @@ using System.Text;
 
 namespace FlightBooking.Core.DomainServices
 {
+    /// <summary>
+    /// A class which encapsulate all the print messages for a flight (using flight rules provider)
+    /// </summary>
     public class PrintManager
     {
         private const string Indentation = "    ";
@@ -90,14 +93,20 @@ namespace FlightBooking.Core.DomainServices
             }
         }
 
+        /// <summary>
+        /// Print flight flying status based on flight rules provider
+        /// </summary>
+        /// <param name="sb"></param>
         private void PrintFlightStatus(StringBuilder sb)
         {
+            /// Can flight proceed to fly based on business rules?
             if (_flightRuleManager.CanProceed())
             {
                 sb.AppendLine("THIS FLIGHT MAY PROCEED");
             }
             else
             {
+                /// Print flight won't proceed with other alternative aircraft details
                 sb.AppendLine("FLIGHT MAY NOT PROCEED");
                 var availableAircrafts = _flightRuleManager.RunOverbookingRule();
                 if (availableAircrafts?.Any() == true)

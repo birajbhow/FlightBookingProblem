@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace FlightBooking.Core
 {
+    /// <summary>
+    /// A class to encompasse all the details regarding current flight
+    /// </summary>
     public class ScheduledFlight
     {
         private readonly FlightSummary _flightSummary;
@@ -16,13 +19,17 @@ namespace FlightBooking.Core
             Aircraft = aircraft;            
             Passengers = new List<Passenger>();
             _airline = airline;
-            _flightSummary = new FlightSummary(flightRoute);            
+            _flightSummary = new FlightSummary(flightRoute);  
         }
 
         public FlightRoute FlightRoute { get; }
         public Plane Aircraft { get; private set; }
         public List<Passenger> Passengers { get; }
 
+        /// <summary>
+        /// Add new passenger and update flight summary
+        /// </summary>
+        /// <param name="passenger"></param>
         public void AddPassenger(Passenger passenger)
         {
             passenger.TicketPrice = FlightRoute.BasePrice;
@@ -35,6 +42,10 @@ namespace FlightBooking.Core
             Aircraft = aircraft;
         }
 
+        /// <summary>
+        /// Build and Generate this flight summary (based on flight rules)
+        /// </summary>
+        /// <returns></returns>
         public string GetSummary()
         {
             var flightRulesManager = new FlightRulesProvider(_flightSummary, FlightRoute, Aircraft, Passengers, _airline);
