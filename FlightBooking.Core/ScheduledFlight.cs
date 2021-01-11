@@ -54,6 +54,7 @@ namespace FlightBooking.Core
         {
             lock(_addLock)
             {
+                /// TODO: Refactor these object creation as DI
                 var flightRulesManager = new FlightRulesProvider(_flightSummary, FlightRoute, Aircraft, Passengers, _airline);
                 var printManager = new PrintManager(FlightRoute, _flightSummary, flightRulesManager, Passengers);
                 return printManager.BuildFlightSummary();
