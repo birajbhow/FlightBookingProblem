@@ -1,4 +1,5 @@
 using FlightBooking.Core;
+using FlightBooking.Core.DomainObjects;
 using FlightBooking.Core.DomainObjects.Passenger;
 using NUnit.Framework;
 
@@ -11,8 +12,9 @@ namespace FlightBooking.Tests
         [SetUp]
         public void Setup()
         {
-            var flightRoute = new FlightRoute("London", "NewYork") { BaseCost = 100, MinimumTakeOffPercentage = 0.5 };
-            this._subject = new ScheduledFlight(flightRoute);
+            var flightRoute = new FlightRoute("London", "NewYork") { BaseCost = 100, MinimumTakeOffPercentage = 0.5 };            
+            var aircraft = new Plane { Id = 123, Name = "Antonov AN-2", NumberOfSeats = 12 };
+            this._subject = new ScheduledFlight(flightRoute, aircraft, new Airline());
         }
 
         [Test]

@@ -1,20 +1,22 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-using System.Text;
+﻿using FlightBooking.Core.DomainObjects;
 using FlightBooking.Core.DomainObjects.Passenger;
+using FlightBooking.Core.DomainServices;
+using System.Collections.Generic;
 
 namespace FlightBooking.Core
 {
     public class ScheduledFlight
     {
-        private const string Indentation = "    ";
-        private FlightSummary _flightSummary;
+        private readonly FlightSummary _flightSummary;
+        private readonly Airline _airline;
 
-        public ScheduledFlight(FlightRoute flightRoute)
+        public ScheduledFlight(FlightRoute flightRoute, Plane aircraft, Airline airline)
         {
             FlightRoute = flightRoute;
+            Aircraft = aircraft;            
             Passengers = new List<Passenger>();
-            _flightSummary = new FlightSummary(flightRoute);
+            _airline = airline;
+            _flightSummary = new FlightSummary(flightRoute);            
         }
 
         public FlightRoute FlightRoute { get; }
@@ -32,41 +34,12 @@ namespace FlightBooking.Core
         {
             Aircraft = aircraft;
         }
-        
+
         public string GetSummary()
         {
-            var sb = new StringBuilder();
-            sb.AppendLine($"Flight summary for {FlightRoute.Title}");
-            sb.AppendLine();
-            sb.AppendLine($"Total passengers: {_flightSummary.SeatsTaken}");
-            sb.AppendLine($"{Indentation}General sales: {Passengers.Count(p => p.Type == PassengerType.General)}");
-            sb.AppendLine($"{Indentation}Loyalty member sales: {Passengers.Count(p => p.Type == PassengerType.LoyaltyMember)}");
-            sb.AppendLine($"{Indentation}Airline employee comps: {Passengers.Count(p => p.Type == PassengerType.AirlineEmployee)}");
-            sb.AppendLine($"{Indentation}Discounted sales: {Passengers.Count(p => p.Type == PassengerType.Discounted)}");
-            sb.AppendLine();
-            sb.AppendLine($"Total expected baggage: {_flightSummary.TotalExpectedBaggage}");
-            sb.AppendLine();
-            sb.AppendLine($"Total revenue from flight:  {_flightSummary.Revenue}");
-            sb.AppendLine($"Total costs from flight::  {_flightSummary.Cost}");
-
-            if (_flightSummary.ProfitSurplus > 0)
-            {
-                sb.AppendLine($"Flight generating profit of: {_flightSummary.ProfitSurplus}");
-            }
-            else
-            {
-                sb.AppendLine($"Flight losing money of: {_flightSummary.ProfitSurplus}");
-            }
-
-            sb.AppendLine();
-            sb.AppendLine($"Total loyalty points given away: {_flightSummary.TotalLoyaltyPointsAccrued}");
-            sb.AppendLine($"Total loyalty points redeemed: {_flightSummary.TotalLoyaltyPointsRedeemed}");
-            sb.AppendLine();
-
-            var canProceed = _flightSummary.CanProceed(Aircraft?.NumberOfSeats ?? 0);
-            sb.AppendLine($"{(canProceed ? "THIS FLIGHT MAY PROCEED" : "FLIGHT MAY NOT PROCEED")}");
-
-            return sb.ToString();
+            var flightRulesManager = new FlightRulesProvider(_flightSummary, FlightRoute, Aircraft, Passengers, _airline);
+            var printManager = new PrintManager(FlightRoute, _flightSummary, flightRulesManager, Passengers);
+            return printManager.BuildFlightSummary();
         }
     }
 }

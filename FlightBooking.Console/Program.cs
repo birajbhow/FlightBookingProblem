@@ -1,6 +1,7 @@
 ﻿using System;
 using FlightBooking.Core;
 using FlightBooking.Core.Constants;
+using FlightBooking.Core.DomainObjects;
 using FlightBooking.Core.DomainObjects.Passenger;
 
 namespace FlightBooking.Console
@@ -82,12 +83,20 @@ namespace FlightBooking.Console
                 BaseCost = 50, 
                 BasePrice = 100, 
                 LoyaltyPointsGained = 5,
-                MinimumTakeOffPercentage = 0.7
+                MinimumTakeOffPercentage = 0.5
             };
 
-            _scheduledFlight = new ScheduledFlight(londonToParis);
+            var airline = new Airline
+            {
+                Aircrafts = new System.Collections.Generic.List<Plane>
+                {
+                    new Plane { Id = 111, Name = "Antonov AN-2", NumberOfSeats = 12 },
+                    new Plane { Id = 222, Name = "Boeing 737", NumberOfSeats = 15 },
+                    new Plane { Id = 333, Name = "Airbus A380", NumberOfSeats = 20 }
+                }
+            };
 
-            _scheduledFlight.SetAircraftForRoute(new Plane { Id = 123, Name = "Antonov AN-2", NumberOfSeats = 12 });
+            _scheduledFlight = new ScheduledFlight(londonToParis, airline.Aircrafts[0], airline);
         }
     }
 }

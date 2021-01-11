@@ -26,33 +26,33 @@ namespace FlightBooking.Core
         public int SeatsTaken { get; set; }
         public double ProfitSurplus => Revenue - Cost;
 
-        public bool CanProceed(int numberOfSeats) => 
-            ProfitSurplus > 0
-            && SeatsTaken < numberOfSeats
-            && SeatsTaken / (double)numberOfSeats > _flightRoute.MinimumTakeOffPercentage;
-
         public void Update(Passenger passenger)
         {
             SeatsTaken++;
             TotalExpectedBaggage += passenger.AllowedBags;
             Cost += _flightRoute.BaseCost;
 
-            if (passenger.Type == PassengerType.LoyaltyMember)
+            switch(passenger.Type)
             {
-                var loyaltyMember = passenger as LoyaltyMember;
-                if (loyaltyMember.IsUsingLoyaltyPoints)
-                {   
-                    TotalLoyaltyPointsRedeemed += Convert.ToInt32(Math.Ceiling(_flightRoute.BasePrice));
-                }
-                else
-                {
-                    TotalLoyaltyPointsAccrued += _flightRoute.LoyaltyPointsGained;             
+                //case PassengerType.AirlineEmployee:
+                //    break;
+                case PassengerType.LoyaltyMember:
+                    {
+                        var loyaltyMember = passenger as LoyaltyMember;
+                        if (loyaltyMember.IsUsingLoyaltyPoints)
+                        {
+                            TotalLoyaltyPointsRedeemed += Convert.ToInt32(Math.Ceiling(_flightRoute.BasePrice));
+                        }
+                        else
+                        {
+                            TotalLoyaltyPointsAccrued += _flightRoute.LoyaltyPointsGained;
+                            Revenue += passenger.TicketPrice;
+                        }
+                    }
+                    break;
+                default:
                     Revenue += passenger.TicketPrice;
-                }
-            } 
-            else
-            {
-                Revenue += passenger.TicketPrice;
+                    break;
             }
         }
     }

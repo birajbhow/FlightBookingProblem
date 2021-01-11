@@ -4,4 +4,14 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="DomainServices\FlightRules\**" />
+    <EmbeddedResource Remove="DomainServices\FlightRules\**" />
+    <None Remove="DomainServices\FlightRules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="DomainObjects\FlightRuleType.cs" />
+  </ItemGroup>
+
 </Project>

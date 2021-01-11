@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FlightBooking.Core.DomainObjects.Passenger
+﻿namespace FlightBooking.Core.DomainObjects.Passenger
 {
     public class DiscountedPassenger : Passenger
     {
