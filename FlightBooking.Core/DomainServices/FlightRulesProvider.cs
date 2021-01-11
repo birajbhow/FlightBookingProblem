@@ -29,7 +29,7 @@ namespace FlightBooking.Core.DomainServices
         /// <summary>
         /// Business rule to decide whether flight can proceed or not
         /// </summary>
-        /// <returns></returns>
+        /// <returns>true/false</returns>
         public bool CanProceed()
         {
             /// Ignoring the profit rule if number of airline employees are more than 
@@ -47,33 +47,36 @@ namespace FlightBooking.Core.DomainServices
         /// If flight is overbooked, check with parent airline if other flights with required
         /// seat capacity available.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of other alternative flight names</returns>
         public IEnumerable<string> RunOverbookingRule()
         {
             return SeatTakenRule
                 ? new List<string>()
                 : airline.Aircrafts
-                    .Where(a => a.Id != aircraft.Id && a.NumberOfSeats > aircraft.NumberOfSeats)
+                    .Where(a => a.Id != aircraft.Id && a.NumberOfSeats >= OverbookedSeats)
                     .Select(a => a.Name);
         }
 
-        #region Private Methods
-        
+        #region Private Flight Rules
+
         /// <summary>
-        /// Check if current flight revenue is more than cost
+        /// Rule: The revenue generated from the flight must exceed the cost of the flight
         /// </summary>
         private bool ProfitRule => flightSummary.ProfitSurplus > 0;
 
         /// <summary>
-        /// Check if seats taken are less than the available seats on the aircraft
+        /// Rule: The number of passengers cannot exceed the amount of seats on the plane
         /// </summary>
         private bool SeatTakenRule => flightSummary.SeatsTaken <= aircraft.NumberOfSeats;
 
         /// <summary>
-        /// Check if current passenger percentage is higher than minimum take off percentage
+        /// Rule: The aircraft must have a minimum percentage of passengers booked for that route
         /// </summary>
         private bool MinimumTakeOffRule => CurrentPassengerPercent > flightRoute.MinimumTakeOffPercentage;
 
+        #endregion Private Flight Rules
+
+        #region Private Methods
         /// <summary>
         /// Current passenger percentage
         /// </summary>
@@ -84,6 +87,10 @@ namespace FlightBooking.Core.DomainServices
         /// </summary>
         private int NumberOfAirlineEmployee => passengers.Count(p => p.Type == PassengerType.AirlineEmployee);
 
+        /// <summary>
+        /// Number of overbooked seats than available on this flight
+        /// </summary>
+        private int OverbookedSeats => flightSummary.SeatsTaken - aircraft.NumberOfSeats;
         #endregion Private Methods
     }
 }

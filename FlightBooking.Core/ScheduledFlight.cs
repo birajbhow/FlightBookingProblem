@@ -12,6 +12,7 @@ namespace FlightBooking.Core
     {
         private readonly FlightSummary _flightSummary;
         private readonly Airline _airline;
+        private readonly object _addLock = new object();
 
         public ScheduledFlight(FlightRoute flightRoute, Plane aircraft, Airline airline)
         {
@@ -32,9 +33,12 @@ namespace FlightBooking.Core
         /// <param name="passenger"></param>
         public void AddPassenger(Passenger passenger)
         {
-            passenger.TicketPrice = FlightRoute.BasePrice;
-            Passengers.Add(passenger);
-            _flightSummary.Update(passenger);
+            lock(_addLock)
+            {
+                passenger.TicketPrice = FlightRoute.BasePrice;
+                Passengers.Add(passenger);
+                _flightSummary.Update(passenger);
+            }
         }
 
         public void SetAircraftForRoute(Plane aircraft)
@@ -48,9 +52,12 @@ namespace FlightBooking.Core
         /// <returns></returns>
         public string GetSummary()
         {
-            var flightRulesManager = new FlightRulesProvider(_flightSummary, FlightRoute, Aircraft, Passengers, _airline);
-            var printManager = new PrintManager(FlightRoute, _flightSummary, flightRulesManager, Passengers);
-            return printManager.BuildFlightSummary();
+            lock(_addLock)
+            {
+                var flightRulesManager = new FlightRulesProvider(_flightSummary, FlightRoute, Aircraft, Passengers, _airline);
+                var printManager = new PrintManager(FlightRoute, _flightSummary, flightRulesManager, Passengers);
+                return printManager.BuildFlightSummary();
+            }
         }
     }
 }
